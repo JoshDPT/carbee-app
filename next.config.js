@@ -7,6 +7,7 @@ const nextConfig = {
   },
   publicRuntimeConfig: {
     // Will be available on both server and client
+    DOMAIN_URL: process.env.DOMAIN_URL,
   },
 	async rewrites() {
 		return [

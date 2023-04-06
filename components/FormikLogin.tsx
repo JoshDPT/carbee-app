@@ -2,6 +2,9 @@ import { Button, Card } from 'flowbite-react';
 import { Form, Formik } from 'formik';
 import FormikInput from './FormikInput';
 import * as Yup from 'yup';
+import { useRouter } from 'next/navigation';
+import handleLogin from '@/lib/handleLogin';
+import { useSession } from 'next-auth/react';
 
 interface FormikProps {
 	id: string;
@@ -38,26 +41,35 @@ const ReservationSchema = Yup.object().shape({
 });
 
 export default function FormikLogin() {
-	
+	const router = useRouter();
+	// const [session, loading] = useSession÷
+	const { data: session, token } = useSession();
+
+	async function handleSubmit(formData) {
+		console.log(formData);
+		// if (await handleLogin(username, password)) {
+		// 	console.log('token ', token);
+		// 	// console.log(session.user.token);
+		// }
+	}
+
 	const formMap: FormikProps[] = [
 		{
 			id: 'email',
 			name: 'email',
 			label: 'Your email',
 			placeholder: 'email@email.com',
-      width: '48',
 		},
 		{
 			id: 'password',
 			name: 'password',
 			label: 'Your password',
-      width: '48',
 		},
 	];
 
 	return (
 		<div className="w-96">
-			<Card className='p-5'>
+			<Card className="p-5">
 				<div className="flex content-center items-center justify-center font-bold">
 					<h1>Carbee</h1>
 				</div>
@@ -68,7 +80,7 @@ export default function FormikLogin() {
 					}}
 					validationSchema={ReservationSchema}
 					onSubmit={(values) => {
-						alert(JSON.stringify(values, null, 2));
+						handleSubmit;
 					}}
 				>
 					{({ errors, touched }) => (
