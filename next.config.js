@@ -4,10 +4,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: 'https://modulith.herokuapp.com/',
-        destination: '/',
+        source: '/api/:path*',
+        destination: 'https://modulith.herokuapp.com/:path*',
       },
-    ]
+    ];
   },
 }
 
