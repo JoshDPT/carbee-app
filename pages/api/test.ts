@@ -1,6 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
+import getConfig from 'next/config';
+
+const { serverRuntimeConfig } = getConfig();
 
 // type for appointment
 type Appointment = {
@@ -18,7 +21,7 @@ export default async function handler(
 ) {
 	// initial auth post
 	const accessToken: string = (
-		await axios.post('http://modulith.herokuapp.com/auth/login', {
+		await axios.post(`${serverRuntimeConfig.DOMAIN_URL}/server/auth/login`, {
 			username: 'candidate@curbee.com',
 			password: 'password',
 		})
@@ -26,11 +29,14 @@ export default async function handler(
 
 	// test the appointment endpoint with jwt auth
 	const appointmentsData: Appointment[] = (
-		await axios.get('http://modulith.herokuapp.com/api/v1/appointments', {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
+		await axios.get(
+			`${serverRuntimeConfig.DOMAIN_URL}/server/api/v1/appointments`,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		)
 	).data;
 
 	res.status(200).send(appointmentsData);
