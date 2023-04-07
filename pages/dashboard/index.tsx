@@ -3,6 +3,7 @@ import { authOptions } from '../api/auth/[...nextauth]';
 import { useSession } from 'next-auth/react';
 import UserAppointmentsViewer from '@/components/UserAppointmentsViewer';
 import NavBar from '@/components/NavBar';
+import UpcomingAvailabilityList from '@/components/UpcomingAvailabilityList';
 
 export default function Dashboard() {
 	const { data: session } = useSession();
@@ -13,6 +14,7 @@ export default function Dashboard() {
 				<NavBar />
 				<main className="flex min-h-screen min-w-full flex-col items-center justify-start gap-4 bg-gray-300 p-4">
 					<UserAppointmentsViewer />
+					<UpcomingAvailabilityList />
 				</main>
 			</>
 		);
