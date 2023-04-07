@@ -33,3 +33,5 @@ type Appointment = {
 	workOrderDto: Object;
 	status: string;
 };
+
+type PageAction = { type: 'increment' } | { type: 'decrement' };

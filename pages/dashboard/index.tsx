@@ -19,7 +19,11 @@ export default function Dashboard() {
 			</>
 		);
 	}
-	return <div>Access Denied</div>;
+	return (
+		<main className="flex min-h-screen min-w-full flex-col items-center justify-start gap-4 bg-gray-300 p-4">
+			<div>Access Denied</div>
+		</main>
+	);
 }
 
 // this is a server side retreival of the session cookie, which then returns the props to the component above- allows the page to not even render if no cookie
