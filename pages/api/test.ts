@@ -5,16 +5,6 @@ import getConfig from 'next/config';
 
 const { serverRuntimeConfig } = getConfig();
 
-// type for appointment
-type Appointment = {
-	id: string;
-	userId: string;
-	duration: number;
-	scheduledTime: string;
-	workOrderDto: Object;
-	status: string;
-};
-
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<Appointment[]>

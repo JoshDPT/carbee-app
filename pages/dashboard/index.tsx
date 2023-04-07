@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { useSession } from 'next-auth/react';
+import UserAppointmentsViewer from '@/components/UserAppointmentsViewer';
 
 //  UpcomingAvailabilityList
 //  UserAppointmentsViewer
@@ -9,7 +10,11 @@ export default function Dashboard() {
 	const { data: session } = useSession();
 
 	if (session) {
-		return <div>This Is Secret</div>;
+		return (
+			<div className="flex min-h-screen min-w-full flex-col items-center justify-start gap-4 bg-gray-300 p-4">
+				<UserAppointmentsViewer />
+			</div>
+		);
 	}
 	return <div>Access Denied</div>;
 }

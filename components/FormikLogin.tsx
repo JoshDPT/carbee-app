@@ -5,34 +5,7 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { useSession, signIn } from 'next-auth/react';
 
-interface FormikProps {
-	id: string;
-	name: string;
-	label: string;
-	placeholder?: string;
-	as?: string;
-	options?: string[] | number[];
-	errors?: Error;
-	touched?: Touched;
-	type?: 'text' | 'password' | 'email' | 'date';
-	width?: string;
-}
-
-interface Error {
-	email: string;
-	password: string;
-}
-interface Touched {
-	email: boolean;
-	password: boolean;
-}
-
-interface LoginData {
-	username: string;
-	password: string;
-}
-
-const ReservationSchema = Yup.object().shape({
+const LoginSchema = Yup.object().shape({
 	username: Yup.string()
 		.min(2, 'Too Short!')
 		.max(50, 'Too Long!')
@@ -47,7 +20,7 @@ const ReservationSchema = Yup.object().shape({
 export default function FormikLogin() {
 	const router = useRouter();
 	const { data: session } = useSession();
-	console.log(session)
+	console.log(session);
 
 	// console.log('session ', session);
 	async function handleSubmit({ username, password }: LoginData) {
@@ -90,7 +63,7 @@ export default function FormikLogin() {
 						username: '',
 						password: '',
 					}}
-					validationSchema={ReservationSchema}
+					validationSchema={LoginSchema}
 					onSubmit={(values, { setSubmitting }) => {
 						handleSubmit(values);
 						setSubmitting(false);

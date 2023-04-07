@@ -1,20 +1,112 @@
+import { Button, Card } from 'flowbite-react';
+import { Form, Formik } from 'formik';
+import FormikInput from './FormikInput';
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
+import getConfig from 'next/config';
 
-
-// GETs and displays user’s appointments
-// This endpoint supports pagination via query parameters. Add pagination controls to the UI to retrieve data for previous and next pages.
-// Create a UI component to display the appointment’s...
-// Appointment status (Scheduled, In-Progress, etc)
-// Start time startTime
-// Appointment duration
-// CompleteTime in 12 hour time.
-// Note that complete time may not be populated if the Appointment has not been completed
-// Service (workOrderDto.service)
-
+const { publicRuntimeConfig } = getConfig();
 
 export default function UserAppointmentsViewer() {
-  return (
-    <div>
-      Enter
-    </div>
-  );
+	const { data: session } = useSession();
+
+	const [date, setDate] = useState<string | null>(null);
+	const [time, setTime] = useState<string | null>(null);
+	const [appointments, setAppointments] = useState<string[] | null>(null);
+
+	useEffect(() => {
+		if (date) {
+			fetchAvailability();
+		}
+	}, [date]);
+
+	async function fetchAvailability() {
+		const appointmentsData: string[] = (
+			await axios.get(
+				`${publicRuntimeConfig.DOMAIN_URL}/server/api/v1/availability/${date}`,
+				{
+					headers: {
+						Authorization: `Bearer ${session?.user?.accessToken}`,
+					},
+				}
+			)
+		).data.times;
+		setAppointments(appointmentsData);
+	}
+
+	const formMap: FormikProps[] = [
+		{
+			id: 'date',
+			name: 'date',
+			label: 'Pick your date',
+			type: 'date',
+			width: '24',
+		},
+	];
+
+	return (
+		<div>
+			<Card>
+				<Formik
+					initialValues={{
+						date: '',
+					}}
+					onSubmit={({ date }) => {
+						setDate(date);
+					}}
+				>
+					<Form className="flex flex-row gap-6 sm:w-48 md:w-96 lg:w-96">
+						{formMap.map((e, i) => (
+							<FormikInput
+								key={i}
+								id={e.id}
+								name={e.name}
+								label={e.label}
+								as={e.as}
+								options={e.options}
+								type={e.type}
+								placeholder={e.placeholder}
+								width={e.width}
+							/>
+						))}
+						<div className="mt-8">
+							<Button type="submit" className="w-full">
+								Find Time
+							</Button>
+						</div>
+					</Form>
+				</Formik>
+			</Card>
+
+			{appointments && appointments.length > 0 && (
+				<Card>
+					<Formik
+						initialValues={{
+							time: '',
+						}}
+						onSubmit={({ time }) => {
+							setTime(time);
+						}}
+					>
+						<Form className="flex flex-row gap-6 sm:w-48 md:w-96 lg:w-96">
+							<FormikInput
+								key={'time'}
+								id={'time'}
+								name={'time'}
+								label={'Select time'}
+								as={'select'}
+								options={appointments}
+							/>
+							<div className="mt-8">
+								<Button type="submit" className="w-full">
+									Find Time
+								</Button>
+							</div>
+						</Form>
+					</Formik>
+				</Card>
+			)}
+		</div>
+	);
 }
