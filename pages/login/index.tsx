@@ -9,3 +9,12 @@ export default function Login() {
 		</div>
 	);
 }
+
+// This is the recommended way for Next.js 9.3 or newer
+// export async function getServerSideProps(context: any) {
+// 	return {
+// 		props: {
+// 			csrfToken: await getCsrfToken(context),
+// 		},
+// 	};
+// }

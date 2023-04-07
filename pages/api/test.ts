@@ -20,13 +20,16 @@ export default async function handler(
 	res: NextApiResponse<Appointment[]>
 ) {
 	// initial auth post
-	const accessToken: string = (
+	let accessToken = (
 		await axios.post(`${serverRuntimeConfig.DOMAIN_URL}/server/auth/login`, {
 			username: 'candidate@curbee.com',
 			password: 'password',
 		})
-	).data.accessToken;
+	).data;
 
+	console.log(accessToken);
+	accessToken = accessToken.accessToken;
+	
 	// test the appointment endpoint with jwt auth
 	const appointmentsData: Appointment[] = (
 		await axios.get(

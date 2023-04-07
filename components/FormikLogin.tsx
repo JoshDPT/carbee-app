@@ -3,8 +3,7 @@ import { Form, Formik } from 'formik';
 import FormikInput from './FormikInput';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
-import handleLogin from '@/lib/handleLogin';
-import { useSession } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 
 interface FormikProps {
 	id: string;
@@ -28,8 +27,13 @@ interface Touched {
 	password: boolean;
 }
 
+interface LoginData {
+	username: string;
+	password: string;
+}
+
 const ReservationSchema = Yup.object().shape({
-	email: Yup.string()
+	username: Yup.string()
 		.min(2, 'Too Short!')
 		.max(50, 'Too Long!')
 		.email()
@@ -42,26 +46,34 @@ const ReservationSchema = Yup.object().shape({
 
 export default function FormikLogin() {
 	const router = useRouter();
-	// const [session, loading] = useSession÷
-	const { data: session, token } = useSession();
+	const { data: session } = useSession();
+	console.log(session)
 
-	async function handleSubmit(formData) {
-		console.log(formData);
-		// if (await handleLogin(username, password)) {
-		// 	console.log('token ', token);
-		// 	// console.log(session.user.token);
-		// }
+	// console.log('session ', session);
+	async function handleSubmit({ username, password }: LoginData) {
+		const res = await signIn('credentials', {
+			redirect: false,
+			username,
+			password,
+		});
+		if (res?.error) {
+			console.log('invalid credentials');
+		} else {
+			console.log('signed in');
+			router.push('/dashboard');
+		}
 	}
 
 	const formMap: FormikProps[] = [
 		{
-			id: 'email',
-			name: 'email',
-			label: 'Your email',
+			id: 'username',
+			name: 'username',
+			label: 'Your username',
 			placeholder: 'email@email.com',
 		},
 		{
 			id: 'password',
+			type: 'password',
 			name: 'password',
 			label: 'Your password',
 		},
@@ -75,15 +87,16 @@ export default function FormikLogin() {
 				</div>
 				<Formik
 					initialValues={{
-						email: '',
+						username: '',
 						password: '',
 					}}
 					validationSchema={ReservationSchema}
-					onSubmit={(values) => {
-						handleSubmit;
+					onSubmit={(values, { setSubmitting }) => {
+						handleSubmit(values);
+						setSubmitting(false);
 					}}
 				>
-					{({ errors, touched }) => (
+					{({ errors, touched, handleSubmit, isSubmitting }) => (
 						<Form className="flex flex-col gap-6">
 							{formMap.map((e, i) => (
 								<FormikInput
@@ -99,8 +112,12 @@ export default function FormikLogin() {
 								/>
 							))}
 							<div className="mt-8">
-								<Button type="submit" className="w-full">
-									Login
+								<Button
+									type="submit"
+									className="w-full"
+									disabled={isSubmitting}
+								>
+									{isSubmitting ? 'Please wait...' : 'Login'}
 								</Button>
 							</div>
 						</Form>

@@ -1,22 +1,34 @@
-import { signIn, getCsrfToken } from 'next-auth/react';
-
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../api/auth/[...nextauth]';
+import { useSession } from 'next-auth/react';
 
 //  UpcomingAvailabilityList
 //  UserAppointmentsViewer
 
 export default function Dashboard() {
-  return (
-    <div>
-      Test 2
-    </div>
-  );
+	const { data: session } = useSession();
+
+	if (session) {
+		return <div>This Is Secret</div>;
+	}
+	return <div>Access Denied</div>;
 }
 
-// This is the recommended way for Next.js 9.3 or newer
-// export async function getServerSideProps(context: any) {
-//   return {
-//     props: {
-//       csrfToken: await getCsrfToken(context),
-//     },
-//   };
-// }
+// this is a server side retreival of the session cookie, which then returns the props to the component above- allows the page to not even render if no cookie
+export async function getServerSideProps(context: any) {
+	// this gets the session cookie from the server
+	const session = await getServerSession(context.req, context.res, authOptions);
+
+	// if there is no session cookie, redirect them to the signin page - well before page renders
+	if (!session) {
+		return {
+			redirect: {
+				destination: '/login',
+				permanent: false,
+			},
+		};
+	}
+	return {
+		props: { session },
+	};
+}
