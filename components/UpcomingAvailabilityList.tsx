@@ -45,7 +45,7 @@ export default function UpcomingAvailabilityList() {
 
 	// Render the component with the count and button elements
 	return (
-		<div className="w-80">
+		<div className="flex flex-col w-80 gap-4">
 			<Card className="flex flex-col items-center justify-center p-4">
 				<h1 className="flex items-center justify-center w-36 h-12 text-lg font-bold text-white bg-slate-500 rounded-full mx-auto">
 					Count: {appointmentNum}
