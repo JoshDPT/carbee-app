@@ -1,7 +1,7 @@
 import { Button, Card } from 'flowbite-react';
 import { Form, Formik } from 'formik';
 import FormikInput from './FormikInput';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import getConfig from 'next/config';
@@ -35,7 +35,7 @@ export default function UserAppointmentsViewer() {
 		setAppointments(appointmentsData);
 	}
 
-	const formMap: FormikProps[] = [
+	const formMap: FormikProps[] = useMemo(() => [
 		{
 			id: 'date',
 			name: 'date',
@@ -43,18 +43,20 @@ export default function UserAppointmentsViewer() {
 			type: 'date',
 			width: '24',
 		},
-	];
+	], []);
+
+	const handleFormSubmit = useCallback(({ date }) => {
+		setDate(date);
+	}, []);
 
 	return (
-		<div>
+		<div className='w-96'>
 			<Card>
 				<Formik
 					initialValues={{
 						date: '',
 					}}
-					onSubmit={({ date }) => {
-						setDate(date);
-					}}
+					onSubmit={handleFormSubmit}
 				>
 					<Form className="flex flex-row gap-6 sm:w-48 md:w-96 lg:w-96">
 						{formMap.map((e, i) => (
@@ -72,7 +74,7 @@ export default function UserAppointmentsViewer() {
 						))}
 						<div className="mt-8">
 							<Button type="submit" className="w-full">
-								Find Time
+								Find Day
 							</Button>
 						</div>
 					</Form>
@@ -97,6 +99,7 @@ export default function UserAppointmentsViewer() {
 								label={'Select time'}
 								as={'select'}
 								options={appointments}
+                width='24'
 							/>
 							<div className="mt-8">
 								<Button type="submit" className="w-full">
