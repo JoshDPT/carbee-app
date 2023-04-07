@@ -21,6 +21,7 @@ export default function UserAppointmentsViewer() {
 		}
 	}, [date]);
 
+	// fetch protected data and update the appointment options
 	async function fetchAvailability() {
 		const appointmentsData: string[] = (
 			await axios.get(
@@ -35,22 +36,25 @@ export default function UserAppointmentsViewer() {
 		setAppointments(appointmentsData);
 	}
 
-	const formMap: FormikProps[] = useMemo(() => [
-		{
-			id: 'date',
-			name: 'date',
-			label: 'Pick your date',
-			type: 'date',
-			width: '24',
-		},
-	], []);
+	const formMap: FormikProps[] = useMemo(
+		() => [
+			{
+				id: 'date',
+				name: 'date',
+				label: 'Pick your date',
+				type: 'date',
+				width: '24',
+			},
+		],
+		[]
+	);
 
-	const handleFormSubmit = useCallback(({ date }) => {
+	const handleFormSubmit = useCallback(({ date }: { date: string }) => {
 		setDate(date);
 	}, []);
 
 	return (
-		<div className='w-96'>
+		<div className="w-96">
 			<Card>
 				<Formik
 					initialValues={{
@@ -99,7 +103,7 @@ export default function UserAppointmentsViewer() {
 								label={'Select time'}
 								as={'select'}
 								options={appointments}
-                width='24'
+								width="24"
 							/>
 							<div className="mt-8">
 								<Button type="submit" className="w-full">
