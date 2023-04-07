@@ -22,31 +22,21 @@ import { StringLiteral } from 'typescript';
 //   "cancelTime": "2023-04-07T13:32:00.029Z"
 // }
 
-interface AppointmentProps {
-  duration: number;
-  scheduledTime: string;
-  workOrderDto: {
-    service: string;
-    status: string;
-    notes: string;
-    startTime: string;
-    completeTime: string;
-    paymentTime: string;
-    cancelTime: string;
-  }
-}
-
-export default function AppointmentCard(appointment: AppointmentProps) {
+export default function AppointmentCard(appointment) {
+	const dummyAppointment: Appointment = appointment.appointment;
 	return (
 		<div>
 			<Card>
 				<div className="divide-y divide-gray-200">
-					<div>{appointment.scheduledTime}</div>
-					<div>Started/Completed
-						{appointment.workOrderDto.startTime} - {appointment.workOrderDto.completeTime}
+					<div className='p-2'>{dummyAppointment.scheduledTime}</div>
+					<div className='p-2'  >
+						Started/Completed<br></br>
+						{dummyAppointment.workOrderDto.startTime} -{' '}
+						{dummyAppointment.workOrderDto.completeTime}
 					</div>
-					<div>Service
-						{appointment.workOrderDto.service}
+					<div className='p-2'>
+						Service<br></br>
+						{dummyAppointment.workOrderDto.service}
 					</div>
 				</div>
 			</Card>

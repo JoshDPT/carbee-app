@@ -30,8 +30,16 @@ type Appointment = {
 	userId: string;
 	duration: number;
 	scheduledTime: string;
-	workOrderDto: Object;
 	status: string;
+	workOrderDto: {
+    service: string;
+    status: string;
+    notes: string;
+    startTime: string;
+    completeTime: string;
+    paymentTime: string;
+    cancelTime: string;
+	}
 };
 
 type PageAction = { type: 'increment' } | { type: 'decrement' };

@@ -57,7 +57,7 @@ export default function UserAppointmentsViewer() {
 	}, []);
 
 	return (
-		<div className="flex flex-col w-96 gap-4">
+		<div className="flex flex-col w-80 gap-4">
 			<Card className="flex flex-col justify-center content-center p-4">
 				<Formik
 					initialValues={{
@@ -65,7 +65,7 @@ export default function UserAppointmentsViewer() {
 					}}
 					onSubmit={handleFormSubmit}
 				>
-					<Form className="flex w-full flex-row content-center items-center justify-center gap-6">
+					<Form className="flex w-full flex-row content-center items-center justify-center gap-3">
 						{formMap.map((e, i) => (
 							<FormikInput
 								key={i}
@@ -98,7 +98,7 @@ export default function UserAppointmentsViewer() {
 							setTime(time);
 						}}
 					>
-						<Form className="flex w-full flex-row content-center items-center justify-center gap-6">
+						<Form className="flex w-full flex-row content-center items-center justify-center gap-3">
 							<FormikInput
 								key={'time'}
 								id={'time'}

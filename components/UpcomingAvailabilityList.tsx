@@ -12,7 +12,7 @@ export default function UpcomingAvailabilityList() {
 	const { data: session } = useSession();
 
 	// initialize state for appointments
-	const [appointments, setAppointments] = useState<object[] | null>(null);
+	const [appointments, setAppointments] = useState<Appointment[] | null>(null);
 	const [appointmentNum, setAppointmentNum] = useState(-1);
 
 	useEffect(() => {
@@ -20,14 +20,13 @@ export default function UpcomingAvailabilityList() {
 	}, []);
 
 	async function handleAppointmentChange(increment: boolean) {
-
 		const newAppointmentNum = increment
 			? appointmentNum + 1
 			: appointmentNum - 1;
 
 		if (newAppointmentNum < 0) return;
 
-		const appointmentsData = (
+		const appointmentsData: Appointment[] = (
 			await axios.get(
 				`${publicRuntimeConfig.DOMAIN_URL}/server/api/v1/appointments?page=${newAppointmentNum}&size=1`,
 				{
@@ -46,12 +45,12 @@ export default function UpcomingAvailabilityList() {
 
 	// Render the component with the count and button elements
 	return (
-		<div className="w-96 mx-auto">
+		<div className="w-80">
 			<Card className="flex flex-col items-center justify-center p-4">
 				<h1 className="flex items-center justify-center w-36 h-12 text-lg font-bold text-white bg-slate-500 rounded-full mx-auto">
 					Count: {appointmentNum}
 				</h1>
-				<div className="flex justify-center gap-6">
+				<div className="flex justify-center gap-3">
 					<Button
 						className="w-36"
 						onClick={() => handleAppointmentChange(false)}
@@ -76,7 +75,7 @@ export default function UpcomingAvailabilityList() {
 					// 	<h1>{appointment.id}</h1>
 					// 	<h1>{appointment.workOrderDto.service}</h1>
 					// </Card>
-					<AppointmentCard appointment={appointment}/>
+					<AppointmentCard key={appointment.id} appointment={appointment} />
 				))}
 		</div>
 	);
