@@ -43,7 +43,7 @@ export default function UserAppointmentsViewer() {
 				name: 'date',
 				label: 'Pick your date',
 				type: 'date',
-				width: '24',
+				width: '36',
 			},
 		],
 		[]
@@ -54,15 +54,15 @@ export default function UserAppointmentsViewer() {
 	}, []);
 
 	return (
-		<div className="w-96">
-			<Card>
+		<div className="flex flex-col w-96 gap-4">
+			<Card className='flex flex-col justify-center content-center p-4'>
 				<Formik
 					initialValues={{
 						date: '',
 					}}
 					onSubmit={handleFormSubmit}
 				>
-					<Form className="flex flex-row gap-6 sm:w-48 md:w-96 lg:w-96">
+					<Form className="flex w-full flex-row content-center items-center justify-center gap-6">
 						{formMap.map((e, i) => (
 							<FormikInput
 								key={i}
@@ -76,9 +76,9 @@ export default function UserAppointmentsViewer() {
 								width={e.width}
 							/>
 						))}
-						<div className="mt-8">
-							<Button type="submit" className="w-full">
-								Find Day
+						<div className="mt-8 w-36">
+							<Button type="submit" className="w-full mb-2">
+								Select Day
 							</Button>
 						</div>
 					</Form>
@@ -86,7 +86,7 @@ export default function UserAppointmentsViewer() {
 			</Card>
 
 			{appointments && appointments.length > 0 && (
-				<Card>
+				<Card className='flex flex-col justify-center content-center p-4'>
 					<Formik
 						initialValues={{
 							time: '',
@@ -95,7 +95,7 @@ export default function UserAppointmentsViewer() {
 							setTime(time);
 						}}
 					>
-						<Form className="flex flex-row gap-6 sm:w-48 md:w-96 lg:w-96">
+						<Form className="flex w-full flex-row content-center items-center justify-center gap-6">
 							<FormikInput
 								key={'time'}
 								id={'time'}
@@ -103,11 +103,11 @@ export default function UserAppointmentsViewer() {
 								label={'Select time'}
 								as={'select'}
 								options={appointments}
-								width="24"
+								width="36"
 							/>
-							<div className="mt-8">
-								<Button type="submit" className="w-full">
-									Find Time
+							<div className="mt-8 w-36">
+								<Button type="submit" className="w-full mb-2">
+									Reserve
 								</Button>
 							</div>
 						</Form>

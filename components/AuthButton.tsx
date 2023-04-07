@@ -8,9 +8,9 @@ export default function AuthButton() {
 	return (
 		<div className="flex flex-row items-center justify-center gap-4">
 			<p className="text-center text-sm font-bold text-black">
-				{sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+				{sessionData && <span>Welcome, {sessionData.user?.name}</span>}
 			</p>
-			<Button
+			<Button className='px-2'
 				onClick={sessionData ? () => void signOut() : () => void signIn()}
 			>
 				{sessionData ? 'Sign out' : 'Sign in'}
