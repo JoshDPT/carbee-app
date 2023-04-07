@@ -7,7 +7,7 @@ export default function AuthButton() {
 
 	return (
 		<div className="flex flex-row items-center justify-center gap-4">
-			<p className="text-center text-sm font-bold text-black">
+			<p className="text-center text-sm italic text-gray-800">
 				{sessionData && <span>Welcome, {sessionData.user?.name}</span>}
 			</p>
 			<Button className='px-2'

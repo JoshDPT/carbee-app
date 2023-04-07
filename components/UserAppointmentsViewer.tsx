@@ -58,7 +58,7 @@ export default function UserAppointmentsViewer() {
 
 	return (
 		<div className="flex flex-col w-80 gap-4">
-			<Card className="flex flex-col justify-center content-center p-4">
+			<Card className="flex flex-col justify-center content-center p-4 shadow">
 				<Formik
 					initialValues={{
 						date: '',

@@ -4,10 +4,12 @@ import axios from 'axios';
 import getConfig from 'next/config';
 import { useSession } from 'next-auth/react';
 import AppointmentCard from './AppointmentCard';
+import { BsFillCalendarEventFill } from 'react-icons/bs';
 
 const { publicRuntimeConfig } = getConfig();
 
 export default function UpcomingAvailabilityList() {
+
 	// pull the session token from the server
 	const { data: session } = useSession();
 
@@ -19,6 +21,7 @@ export default function UpcomingAvailabilityList() {
 		handleAppointmentChange(true);
 	}, []);
 
+	// handle the appointment change either next or previous
 	async function handleAppointmentChange(increment: boolean) {
 		const newAppointmentNum = increment
 			? appointmentNum + 1
@@ -46,9 +49,10 @@ export default function UpcomingAvailabilityList() {
 	// Render the component with the count and button elements
 	return (
 		<div className="flex flex-col w-80 gap-4">
-			<Card className="flex flex-col items-center justify-center p-4">
-				<h1 className="flex items-center justify-center w-36 h-12 text-lg font-bold text-white bg-slate-500 rounded-full mx-auto">
-					Count: {appointmentNum}
+			<Card className="flex flex-col items-center justify-center p-4 shadow">
+				<h1 className="flex items-center justify-center text-lg font-bold text-gray-700 rounded-full mx-auto gap-2">
+					<BsFillCalendarEventFill />
+					Select Appointment
 				</h1>
 				<div className="flex justify-center gap-3">
 					<Button
@@ -68,13 +72,6 @@ export default function UpcomingAvailabilityList() {
 			{appointments &&
 				appointments.length > 0 &&
 				appointments?.map((appointment) => (
-					// <Card
-					// 	key={appointment.id}
-					// 	className="flex flex-col justify-center content-center p-4 w-96 h-12"
-					// >
-					// 	<h1>{appointment.id}</h1>
-					// 	<h1>{appointment.workOrderDto.service}</h1>
-					// </Card>
 					<AppointmentCard key={appointment.id} appointment={appointment} />
 				))}
 		</div>

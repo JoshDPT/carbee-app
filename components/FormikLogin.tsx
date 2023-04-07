@@ -4,6 +4,7 @@ import FormikInput from './FormikInput';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { useSession, signIn } from 'next-auth/react';
+import { AiFillCar } from 'react-icons/ai';
 
 const LoginSchema = Yup.object().shape({
 	username: Yup.string()
@@ -53,10 +54,16 @@ export default function FormikLogin() {
 	];
 
 	return (
-		<div className="w-96">
-			<Card className="p-5">
+		<div className="w-80 md:w-96">
+			<Card className="p-5 shadow-lg">
 				<div className="flex content-center items-center justify-center font-bold">
-					<h1>Carbee</h1>
+				<a href="#" className="flex items-center gap-3">
+          {/* IMAGE */}
+          <span className="self-center whitespace-nowrap text-3xl italic font-black dark:text-white">
+            Carbee
+          </span>
+          <AiFillCar size={36}/>
+        </a>
 				</div>
 				<Formik
 					initialValues={{
