@@ -21,9 +21,7 @@ const LoginSchema = Yup.object().shape({
 export default function FormikLogin() {
 	const router = useRouter();
 	const { data: session } = useSession();
-	console.log(session);
 
-	// console.log('session ', session);
 	async function handleSubmit({ username, password }: LoginData) {
 		const res = await signIn('credentials', {
 			redirect: false,

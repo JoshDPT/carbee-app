@@ -1,17 +1,22 @@
 import { Button, Card } from 'flowbite-react';
 import { useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
-import getConfig from 'next/config';
-import { useSession } from 'next-auth/react';
 import AppointmentCard from './AppointmentCard';
 import { BsFillCalendarEventFill } from 'react-icons/bs';
 
-const { publicRuntimeConfig } = getConfig();
 
-export default function UpcomingAvailabilityList() {
 
+interface UpcomingAvailabilityListProps {
+	accessToken: string;
+	domainUrl: string;
+}
+
+export default function UpcomingAvailabilityList({
+	accessToken,
+	domainUrl,
+}: UpcomingAvailabilityListProps) {
 	// pull the session token from the server
-	const { data: session } = useSession();
+	// const { data: session } = useSession();
 
 	// initialize state for appointments
 	const [appointments, setAppointments] = useState<Appointment[] | null>(null);
@@ -31,10 +36,10 @@ export default function UpcomingAvailabilityList() {
 
 		const appointmentsData: Appointment[] = (
 			await axios.get(
-				`${publicRuntimeConfig.DOMAIN_URL}/server/api/v1/appointments?page=${newAppointmentNum}&size=1`,
+				`${domainUrl}/server/api/v1/appointments?page=${newAppointmentNum}&size=1`,
 				{
 					headers: {
-						Authorization: `Bearer ${session?.user?.accessToken}`,
+						Authorization: `Bearer ${accessToken}`,
 					},
 				}
 			)
@@ -72,7 +77,15 @@ export default function UpcomingAvailabilityList() {
 			{appointments &&
 				appointments.length > 0 &&
 				appointments?.map((appointment) => (
-					<AppointmentCard key={appointment.id} appointment={appointment} />
+					<AppointmentCard
+						key={appointment.id}
+						scheduledTime={appointment.scheduledTime}
+						duration={appointment.duration}
+						status={appointment.status}
+						startTime={appointment.workOrderDto.startTime}
+						completeTime={appointment.workOrderDto.completeTime}
+						service={appointment.workOrderDto.service}
+					/>
 				))}
 		</div>
 	);

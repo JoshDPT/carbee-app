@@ -1,8 +1,6 @@
 import { Label } from 'flowbite-react';
 import { ErrorMessage, Field, useField } from 'formik';
 
-// Validated with FORMIK
-
 export default function FormikInput({
 	id,
 	name,

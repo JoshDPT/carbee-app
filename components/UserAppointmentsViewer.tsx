@@ -2,16 +2,18 @@ import { Button, Card } from 'flowbite-react';
 import { Form, Formik } from 'formik';
 import FormikInput from './FormikInput';
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { useSession } from 'next-auth/react';
 import axios from 'axios';
-import getConfig from 'next/config';
 
-const { publicRuntimeConfig } = getConfig();
+interface UserAppointmentsViewerProps {
+	accessToken: string;
+	domainUrl: string;
+}
 
-// GETs availability and lists times by a selected upcoming date (eg: 2023-03-30), starting with tomorrow. You can use a <select> to choose availability, or get creative with it if you so choose.
-
-export default function UserAppointmentsViewer() {
-	const { data: session } = useSession();
+export default function UserAppointmentsViewer({
+	accessToken,
+	domainUrl,
+}: UserAppointmentsViewerProps) {
+	// const { data: session } = useSession();
 
 	const [date, setDate] = useState<string | null>(null);
 	const [time, setTime] = useState<string | null>(null);
@@ -26,31 +28,15 @@ export default function UserAppointmentsViewer() {
 	// fetch protected data and update the appointment options
 	async function fetchAvailability() {
 		const appointmentsData: string[] = (
-			await axios.get(
-				`${publicRuntimeConfig.DOMAIN_URL}/server/api/v1/availability/${date}`,
-				{
-					headers: {
-						Authorization: `Bearer ${session?.user?.accessToken}`,
-					},
-				}
-			)
+			await axios.get(`${domainUrl}/server/api/v1/availability/${date}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			})
 		).data.times;
 		setAppointments(appointmentsData);
 	}
 
-	// added useMemo to improve performance
-	const formMap: FormikProps[] = useMemo(
-		() => [
-			{
-				id: 'date',
-				name: 'date',
-				label: 'Pick your date',
-				type: 'date',
-				width: '36',
-			},
-		],
-		[]
-	);
 	// added useCallback to improve performance
 	const handleFormSubmit = useCallback(({ date }: { date: string }) => {
 		setDate(date);
@@ -66,19 +52,14 @@ export default function UserAppointmentsViewer() {
 					onSubmit={handleFormSubmit}
 				>
 					<Form className="flex w-full flex-row content-center items-center justify-center gap-3">
-						{formMap.map((e, i) => (
-							<FormikInput
-								key={i}
-								id={e.id}
-								name={e.name}
-								label={e.label}
-								as={e.as}
-								options={e.options}
-								type={e.type}
-								placeholder={e.placeholder}
-								width={e.width}
-							/>
-						))}
+						<FormikInput
+							key={'date'}
+							id={'date'}
+							name={'date'}
+							label={'Pick your date'}
+							type={'date'}
+							width={'36'}
+						/>
 						<div className="mt-8 w-36">
 							<Button type="submit" className="w-full mb-2">
 								Select Day

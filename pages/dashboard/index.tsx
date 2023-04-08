@@ -4,24 +4,37 @@ import { useSession } from 'next-auth/react';
 import UserAppointmentsViewer from '@/components/UserAppointmentsViewer';
 import NavBar from '@/components/NavBar';
 import UpcomingAvailabilityList from '@/components/UpcomingAvailabilityList';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
 
 export default function Dashboard() {
 	const { data: session } = useSession();
+	const accessToken = session?.user.accessToken;
+	const domainUrl = publicRuntimeConfig.DOMAIN_URL;
 
-	if (session) {
+	if (session && accessToken && domainUrl) {
 		return (
 			<>
 				<NavBar />
 				<main className="flex min-h-screen min-w-full flex-col items-center justify-start gap-4 bg-gray-300 p-4">
-					<UserAppointmentsViewer />
-					<UpcomingAvailabilityList />
+					<UserAppointmentsViewer
+						accessToken={accessToken}
+						domainUrl={domainUrl}
+					/>
+					<UpcomingAvailabilityList
+						accessToken={accessToken}
+						domainUrl={domainUrl}
+					/>
 				</main>
 			</>
 		);
 	}
 	return (
 		<main className="flex min-h-screen min-w-full flex-col items-center justify-start gap-4 bg-gray-300 p-4">
-			<div>Access Denied</div>
+			<div className="text-3xl text-red-500 font-bold animate-pulse">
+				Access Denied
+			</div>
 		</main>
 	);
 }

@@ -42,4 +42,14 @@ type Appointment = {
 	}
 };
 
+interface AppointmentCardProps {
+	duration: number;
+	scheduledTime: string;
+	status: string;
+	service: string;
+	status: string;
+	startTime: string;
+	completeTime: string;
+};
+
 type PageAction = { type: 'increment' } | { type: 'decrement' };
