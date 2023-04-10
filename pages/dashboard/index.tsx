@@ -18,11 +18,11 @@ export default function Dashboard() {
 			<>
 				<NavBar />
 				<main className="flex min-h-screen min-w-full flex-col items-center justify-start gap-4 bg-gray-300 p-4">
-					<UserAppointmentsViewer
+					<UpcomingAvailabilityList
 						accessToken={accessToken}
 						domainUrl={domainUrl}
 					/>
-					<UpcomingAvailabilityList
+					<UserAppointmentsViewer
 						accessToken={accessToken}
 						domainUrl={domainUrl}
 					/>

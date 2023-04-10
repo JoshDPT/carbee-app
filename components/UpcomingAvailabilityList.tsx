@@ -1,92 +1,105 @@
 import { Button, Card } from 'flowbite-react';
-import { useState, useEffect, useReducer } from 'react';
+import { Form, Formik } from 'formik';
+import FormikInput from './FormikInput';
+import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import AppointmentCard from './AppointmentCard';
-import { BsFillCalendarEventFill } from 'react-icons/bs';
-
-
-
-interface UpcomingAvailabilityListProps {
-	accessToken: string;
-	domainUrl: string;
-}
 
 export default function UpcomingAvailabilityList({
 	accessToken,
 	domainUrl,
 }: UpcomingAvailabilityListProps) {
-	// pull the session token from the server
 	// const { data: session } = useSession();
 
-	// initialize state for appointments
-	const [appointments, setAppointments] = useState<Appointment[] | null>(null);
-	const [appointmentNum, setAppointmentNum] = useState(-1);
+	const [date, setDate] = useState<string | null>(null);
+	const [time, setTime] = useState<string | null>(null);
+	const [appointments, setAppointments] = useState<string[] | null>(null);
 
 	useEffect(() => {
-		handleAppointmentChange(true);
-	}, []);
+		if (date) {
+			fetchAvailability();
+		}
+	}, [date]);
 
-	// handle the appointment change either next or previous
-	async function handleAppointmentChange(increment: boolean) {
-		const newAppointmentNum = increment
-			? appointmentNum + 1
-			: appointmentNum - 1;
-
-		if (newAppointmentNum < 0) return;
-
-		const appointmentsData: Appointment[] = (
-			await axios.get(
-				`${domainUrl}/server/api/v1/appointments?page=${newAppointmentNum}&size=1`,
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				}
-			)
-		).data;
-		// If there are no appointments at that page #, return without incrementing/decrementing
-		if (!appointmentsData.length) return;
-
-		setAppointmentNum(newAppointmentNum);
+	// fetch protected data and update the appointment options
+	async function fetchAvailability() {
+		const appointmentsData: string[] = (
+			await axios.get(`${domainUrl}/server/api/v1/availability/${date}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			})
+		).data.times;
 		setAppointments(appointmentsData);
 	}
 
-	// Render the component with the count and button elements
+	// added useCallback to improve performance
+	const handleFormSubmit = useCallback(({ date }: { date: string }) => {
+		setDate(date);
+	}, []);
+
 	return (
-		<div className="flex flex-col w-80 gap-4">
-			<Card className="flex flex-col items-center justify-center p-4 shadow">
-				<h1 className="flex items-center justify-center text-lg font-bold text-gray-700 rounded-full mx-auto gap-2">
-					<BsFillCalendarEventFill />
-					Select Appointment
-				</h1>
-				<div className="flex justify-center gap-3">
-					<Button
-						className="w-36"
-						onClick={() => handleAppointmentChange(false)}
-					>
-						Previous
-					</Button>
-					<Button
-						className="w-36"
-						onClick={() => handleAppointmentChange(true)}
-					>
-						Next
-					</Button>
+		<>
+			<Card className="shadow w-96">
+				<div className="flex justify-between gap-4 p-4">
+					{/* PICK DATE COMPONENT */}
+					<div className="w-44">
+						<Formik
+							initialValues={{
+								date: '',
+							}}
+							onSubmit={handleFormSubmit}
+						>
+							<Form>
+								<div className="">
+									<FormikInput
+										key={'date'}
+										id={'date'}
+										name={'date'}
+										label={'Pick your date'}
+										type={'date'}
+										width={'40'}
+									/>
+									<Button className="w-40" type="submit">
+										Select Day
+									</Button>
+								</div>
+							</Form>
+						</Formik>
+					</div>
+
+					{/* PICK TIME COMPONENT*/}
+					<div className="w-44">
+						{appointments && appointments.length > 0 && (
+							<Formik
+								initialValues={{
+									time: '',
+								}}
+								onSubmit={({ time }) => {
+									setTime(time);
+								}}
+							>
+								<Form>
+									<div>
+										<FormikInput
+											key={'time'}
+											id={'time'}
+											name={'time'}
+											label={'Select time'}
+											as={'select'}
+											options={appointments}
+											width={'44'}
+										/>
+
+										<Button type="submit" className="w-44">
+											Reserve
+										</Button>
+									</div>
+								</Form>
+							</Formik>
+						)}
+					</div>
 				</div>
 			</Card>
-			{appointments &&
-				appointments.length > 0 &&
-				appointments?.map((appointment) => (
-					<AppointmentCard
-						key={appointment.id}
-						scheduledTime={appointment.scheduledTime}
-						duration={appointment.duration}
-						status={appointment.status}
-						startTime={appointment.workOrderDto.startTime}
-						completeTime={appointment.workOrderDto.completeTime}
-						service={appointment.workOrderDto.service}
-					/>
-				))}
-		</div>
+		</>
 	);
 }

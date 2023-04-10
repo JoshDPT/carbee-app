@@ -1,103 +1,89 @@
 import { Button, Card } from 'flowbite-react';
-import { Form, Formik } from 'formik';
-import FormikInput from './FormikInput';
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
-
-interface UserAppointmentsViewerProps {
-	accessToken: string;
-	domainUrl: string;
-}
+import AppointmentCard from './AppointmentCard';
+import { BsFillCalendarEventFill } from 'react-icons/bs';
 
 export default function UserAppointmentsViewer({
 	accessToken,
 	domainUrl,
 }: UserAppointmentsViewerProps) {
+	// pull the session token from the server
 	// const { data: session } = useSession();
 
-	const [date, setDate] = useState<string | null>(null);
-	const [time, setTime] = useState<string | null>(null);
-	const [appointments, setAppointments] = useState<string[] | null>(null);
+	// initialize state for appointments
+	const [appointments, setAppointments] = useState<Appointment[] | null>(null);
+	const [appointmentNum, setAppointmentNum] = useState(-1);
 
 	useEffect(() => {
-		if (date) {
-			fetchAvailability();
-		}
-	}, [date]);
+		handleAppointmentChange(true);
+	}, []);
 
-	// fetch protected data and update the appointment options
-	async function fetchAvailability() {
-		const appointmentsData: string[] = (
-			await axios.get(`${domainUrl}/server/api/v1/availability/${date}`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			})
-		).data.times;
+	// handle the appointment change either next or previous
+	async function handleAppointmentChange(increment: boolean) {
+		const newAppointmentNum = increment
+			? appointmentNum + 1
+			: appointmentNum - 1;
+
+		if (newAppointmentNum < 0) return;
+
+		const appointmentsData: Appointment[] = (
+			await axios.get(
+				`${domainUrl}/server/api/v1/appointments?page=${newAppointmentNum}&size=1`,
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				}
+			)
+		).data;
+		// If there are no appointments at that page #, return without incrementing/decrementing
+		if (!appointmentsData.length) return;
+
+		setAppointmentNum(newAppointmentNum);
 		setAppointments(appointmentsData);
 	}
 
-	// added useCallback to improve performance
-	const handleFormSubmit = useCallback(({ date }: { date: string }) => {
-		setDate(date);
-	}, []);
-
+	// Render the component with the count and button elements
 	return (
-		<div className="flex flex-col w-80 gap-4">
-			<Card className="flex flex-col justify-center content-center p-4 shadow">
-				<Formik
-					initialValues={{
-						date: '',
-					}}
-					onSubmit={handleFormSubmit}
-				>
-					<Form className="flex w-full flex-row content-center items-center justify-center gap-3">
-						<FormikInput
-							key={'date'}
-							id={'date'}
-							name={'date'}
-							label={'Pick your date'}
-							type={'date'}
-							width={'36'}
-						/>
-						<div className="mt-8 w-36">
-							<Button type="submit" className="w-full mb-2">
-								Select Day
-							</Button>
-						</div>
-					</Form>
-				</Formik>
-			</Card>
+		<div className="flex flex-col w-96 gap-4">
+			<Card className="flex flex-col p-4 shadow">
 
-			{appointments && appointments.length > 0 && (
-				<Card className="flex flex-col justify-center content-center p-4">
-					<Formik
-						initialValues={{
-							time: '',
-						}}
-						onSubmit={({ time }) => {
-							setTime(time);
-						}}
+				<h1 className="flex items-center justify-center text-lg font-bold text-gray-700 gap-2">
+					<BsFillCalendarEventFill />
+					Select Appointment
+				</h1>
+
+				{/* PREV / NEXT BUTTON DIV */}
+				<div className="flex gap-3">
+					<Button
+						className="w-3/4"
+						onClick={() => handleAppointmentChange(false)}
 					>
-						<Form className="flex w-full flex-row content-center items-center justify-center gap-3">
-							<FormikInput
-								key={'time'}
-								id={'time'}
-								name={'time'}
-								label={'Select time'}
-								as={'select'}
-								options={appointments}
-								width="36"
-							/>
-							<div className="mt-8 w-36">
-								<Button type="submit" className="w-full mb-2">
-									Reserve
-								</Button>
-							</div>
-						</Form>
-					</Formik>
-				</Card>
-			)}
+						Previous
+					</Button>
+					<Button
+						className="w-3/4"
+						onClick={() => handleAppointmentChange(true)}
+					>
+						Next
+					</Button>
+				</div>
+
+			</Card>
+			{appointments &&
+				appointments.length > 0 &&
+				appointments?.map((appointment) => (
+					<AppointmentCard
+						key={appointment.id}
+						scheduledTime={appointment.scheduledTime}
+						duration={appointment.duration}
+						status={appointment.status}
+						startTime={appointment.workOrderDto.startTime}
+						completeTime={appointment.workOrderDto.completeTime}
+						service={appointment.workOrderDto.service}
+					/>
+				))}
 		</div>
 	);
 }

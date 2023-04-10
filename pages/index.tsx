@@ -1,4 +1,3 @@
-import UpcomingAvailabilityList from '@/components/UpcomingAvailabilityList'
 import Head from 'next/head'
 
 

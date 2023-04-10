@@ -32,14 +32,14 @@ type Appointment = {
 	scheduledTime: string;
 	status: string;
 	workOrderDto: {
-    service: string;
-    status: string;
-    notes: string;
-    startTime: string;
-    completeTime: string;
-    paymentTime: string;
-    cancelTime: string;
-	}
+		service: string;
+		status: string;
+		notes: string;
+		startTime: string;
+		completeTime: string;
+		paymentTime: string;
+		cancelTime: string;
+	};
 };
 
 interface AppointmentCardProps {
@@ -50,6 +50,16 @@ interface AppointmentCardProps {
 	status: string;
 	startTime: string;
 	completeTime: string;
-};
+}
 
 type PageAction = { type: 'increment' } | { type: 'decrement' };
+
+interface UpcomingAvailabilityListProps {
+	accessToken: string;
+	domainUrl: string;
+}
+
+interface UserAppointmentsViewerProps {
+	accessToken: string;
+	domainUrl: string;
+}
