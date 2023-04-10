@@ -1,38 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Project Reflection
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Did you run into any “gotchas” along the way? If so, what were they and how did you address them?
+    1. HTTPS vs HTTP - API fetching - error reading
+    2. Next rewrite - dove into docs
+    3. Session Next Auth typing modification - dove into docs
+2. How did you handle forms? In a largely form-driven project, would you do anything differently? If so, what?
+    4. Formik - validation
+    5. Less CLS - better UI
+    6. Form driven project- I would use State MGMT like context, redux, etc.
+    7. Likely not fetch one item at a time- did it to show off pagination for an array with a length of 4
+3. How did you handle authorization? In your ideal FE/BE scenario, what auth strategy would you use?
+    8. Used- Next auth - secure cookies & JWT tokens
+    9. Ideal - Combination of JWT & Sessions- love to talk more about this.
+    10. Passwordless / 2FA
+4. Is there anything you’d like to share about your project prior to my evaluating it?
+    11. I enjoyed it!
+    12. With more time I would match the styling to Curbee
+5. How long did you spend on this exercise? If you had unlimited more time to spend on this, how would you spend it and how would you prioritize each item?
+    13. About 8 hours?
+    14. Performance- Lighthouse scores
+        1. Enormous network payloads #1 issue
+            1. Minification: Minification involves removing whitespace and comments from your code, reducing its size. You can use a tool like UglifyJS or Terser to minify your code.
+            2. Compression: Enabling compression for your assets can greatly reduce the network payload. Next.js supports gzip compression out of the box, which can be enabled by setting the "compression" configuration option.
+            3. Caching: Caching can help reduce the number of requests made by the client, as assets that have already been downloaded are stored in the client's cache. You can use the "Cache-Control" header to set caching policies for your assets.
+            4. Remove Unused Code and Assets: Make sure to remove any code and assets that are no longer being used in your application. This will reduce the size of your codebase and the network payload.
+    15. User Experience / Interface - Styling
+    16. Testing
+    17. Reponsiveness
+    18. Commenting / documentation
