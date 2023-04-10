@@ -39,10 +39,10 @@ export default function UpcomingAvailabilityList({
 
 	return (
 		<>
-			<Card className="shadow w-96">
+			<Card className="shadow sm:w-96 w-80">
 				<div className="flex justify-between gap-4 p-4">
 					{/* PICK DATE COMPONENT */}
-					<div className="w-44">
+					<div className="sm:w-40 w-32">
 						<Formik
 							initialValues={{
 								date: '',
@@ -57,9 +57,9 @@ export default function UpcomingAvailabilityList({
 										name={'date'}
 										label={'Pick your date'}
 										type={'date'}
-										width={'40'}
+										width={'w-full'}
 									/>
-									<Button className="w-40" type="submit">
+									<Button className="sm:w-40 w-32" type="submit">
 										Select Day
 									</Button>
 								</div>
@@ -68,7 +68,7 @@ export default function UpcomingAvailabilityList({
 					</div>
 
 					{/* PICK TIME COMPONENT*/}
-					<div className="w-44">
+					<div className="sm:w-40 w-32">
 						{appointments && appointments.length > 0 && (
 							<Formik
 								initialValues={{
@@ -87,10 +87,10 @@ export default function UpcomingAvailabilityList({
 											label={'Select time'}
 											as={'select'}
 											options={appointments}
-											width={'44'}
+											width={'w-full'}
 										/>
 
-										<Button type="submit" className="w-44">
+										<Button type="submit" className="sm:w-40 w-32">
 											Reserve
 										</Button>
 									</div>

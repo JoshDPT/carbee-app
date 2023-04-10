@@ -46,7 +46,7 @@ export default function UserAppointmentsViewer({
 
 	// Render the component with the count and button elements
 	return (
-		<div className="flex flex-col w-96 gap-4">
+		<div className="flex flex-col sm:w-96 w-80 gap-4">
 			<Card className="flex flex-col p-4 shadow">
 
 				<h1 className="flex items-center justify-center text-lg font-bold text-gray-700 gap-2">

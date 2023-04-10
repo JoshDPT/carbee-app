@@ -7,7 +7,6 @@ export default function NavBar() {
       {/* Logo & Name */}
       <div className="container mx-auto flex flex-wrap items-center justify-center md:justify-between gap-x-6 gap-y-2">
         <a href="#" className="flex items-center gap-3">
-          {/* IMAGE */}
           <span className="self-center whitespace-nowrap text-3xl italic font-black">
             Carbee
           </span>
